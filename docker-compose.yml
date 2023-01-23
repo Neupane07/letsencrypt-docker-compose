@@ -16,6 +16,9 @@ services:
       - "80:80"
       - "443:443"
     restart: unless-stopped
+    depends_on:
+      - client1-frontend
+      - client1-backend
 
   certbot:
     build: ./certbot
@@ -35,6 +38,46 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./:/workdir:ro
     restart: unless-stopped
+
+  client1-frontend:
+    build:
+      context: ../client1/Connector-Frontend/.
+    ports:
+      - "3000:80"
+    container_name: client1-frontend
+    env_file: ../client1/Connector-Frontend/.env
+
+  client1-backend:
+    build:
+      context: ../client1/Connector-Backend/.
+    ports:
+      - "4000:4000"
+    container_name: client1-backend
+    env_file: ../client1/Connector-Backend/.env
+
+  client2-frontend:
+    build:
+      context: ../client2/Connector-Frontend/.
+    ports:
+      - "3001:80"
+    container_name: client2-frontend
+    env_file: ../client2/Connector-Frontend/.env
+
+  client2-backend:
+    build:
+      context: ../client2/Connector-Backend/.
+    ports:
+      - "4001:4000"
+    container_name: client2-backend
+    env_file: ../client2/Connector-Backend/.env
+
+  services-manager:
+    build:
+      context: ../Connector-Services-Manager/.
+    ports:
+      - "8000:8000"
+    container_name: services-manager
+    env_file: ../Connector-Services-Manager/.env
 
 volumes:
   nginx_conf:
