@@ -40,12 +40,10 @@ services:
     restart: unless-stopped
 
   client1-frontend:
-    build:
-      context: ../client1/Connector-Frontend/.
+    image: hbkbimal/frontend
     ports:
       - "3000:80"
     container_name: client1-frontend
-    env_file: ../client1/Connector-Frontend/.env
 
   client1-backend:
     build:
@@ -71,13 +69,27 @@ services:
     container_name: client2-backend
     env_file: ../client2/Connector-Backend/.env
 
-  services-manager:
+  client3-frontend:
     build:
-      context: ../Connector-Services-Manager/.
+      context: ../client3/Connector-Frontend/.
+    ports:
+      - "3002:80"
+    container_name: client3-frontend
+    env_file: ../client3/Connector-Frontend/.env
+
+  client3-backend:
+    build:
+      context: ../client3/Connector-Backend/.
+    ports:
+      - "4002:4000"
+    container_name: client3-backend
+    env_file: ../client3/Connector-Backend/.env
+ 
+  services-manager:
+    image: hbkbimal/services-manager
     ports:
       - "8000:8000"
     container_name: services-manager
-    env_file: ../Connector-Services-Manager/.env
 
 volumes:
   nginx_conf:
